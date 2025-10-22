@@ -1,9 +1,0 @@
-name,city,address,phone,latitude,longitude,emergency_available,rating
-AIIMS Delhi,Delhi,"Ansari Nagar, New Delhi",+91-11-26588500,28.5672,77.21,True,4.5
-Safdarjung Hospital,Delhi,"Safdarjung, New Delhi",+91-11-26165060,28.5678,77.2065,True,4.2
-KEM Hospital,Mumbai,"Parel, Mumbai",+91-22-24107000,19.003,72.843,True,4.3
-Lilavati Hospital,Mumbai,"Bandra West, Mumbai",+91-22-26567891,19.0596,72.8295,True,4.6
-Manipal Hospital,Bangalore,"HAL Airport Road, Bangalore",+91-80-25024444,12.9576,77.6365,True,4.4
-Victoria Hospital,Bangalore,"Fort, Bangalore",+91-80-26700301,12.9716,77.5946,True,4.1
-Apollo Hospital,Chennai,"Greams Road, Chennai",+91-44-28293333,13.0569,80.2433,True,4.5
-SSKM Hospital,Kolkata,"244 AJC Bose Road, Kolkata",+91-33-22231200,22.5469,88.3515,True,4.0
