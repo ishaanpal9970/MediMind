@@ -27,6 +27,5 @@ streamlit-chat>=0.1.1
 
 # Utility
 python-dotenv>=1.0.0
-pickle5>=0.0.11
 
 # Note: difflib is built-in to Python, no need to install

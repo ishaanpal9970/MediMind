@@ -1,0 +1,97 @@
+[global]
+# Development or production mode
+developmentMode = false
+
+# Level of logging: 'error', 'warning', 'info', or 'debug'
+logLevel = "info"
+
+# Show warning about running in development mode
+showWarningOnDirectExecution = false
+
+[server]
+# Port where the app will run
+port = 8501
+
+# Enable CORS (if needed for API calls)
+enableCORS = false
+
+# Enable XSRF protection
+enableXsrfProtection = true
+
+# Maximum size of file uploads (in MB)
+maxUploadSize = 200
+
+# Maximum size of messages (in MB)
+maxMessageSize = 200
+
+# Server address
+headless = false
+address = "0.0.0.0"
+
+# Enable websocket compression
+enableWebsocketCompression = true
+
+# Run server in headless mode (no browser opens automatically)
+# Set to true for production
+runOnSave = false
+
+[browser]
+# Server address that will be shown in browser
+# Leave empty to use default
+serverAddress = "localhost"
+
+# Port that will be shown in browser
+serverPort = 8501
+
+# Whether to gather usage stats
+gatherUsageStats = false
+
+[runner]
+# Run Streamlit in "debug mode"
+magicEnabled = true
+
+# Install a Python tracer
+installTracer = false
+
+# Fix matplotlib rendering issues
+fixMatplotlib = true
+
+# Allow running Streamlit with "streamlit run"
+postScriptGC = true
+
+# Optimize for faster reruns
+fastReruns = true
+
+[client]
+# Whether to show the toolbar at the top
+showToolbar = true
+
+# Show error details
+showErrorDetails = true
+
+# Show sidebar by default
+showSidebarNavigation = true
+
+# Display toolbar when in fullscreen mode
+toolbarMode = "auto"
+
+[theme]
+# Primary color (used for interactive elements)
+primaryColor = "#1f77b4"
+
+# Background color
+backgroundColor = "#ffffff"
+
+# Secondary background color (used for sidebar)
+secondaryBackgroundColor = "#f0f2f6"
+
+# Text color
+textColor = "#262730"
+
+# Font family
+font = "sans serif"
+
+[deprecation]
+# Show deprecation warnings
+showfileUploaderEncoding = false
+showPyplotGlobalUse = false
