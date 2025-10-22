@@ -2,8 +2,7 @@ import streamlit as st
 import torch
 import pickle
 import numpy as np
-from src.inference import HealthcareAssistant
-from src.enhanced_model import TFIDFSymptomEncoder
+import os
 import time
 
 # Page configuration
@@ -52,21 +51,148 @@ st.markdown("""
         border-radius: 0.5rem;
         margin: 1rem 0;
     }
+    .error-box {
+        background-color: #f8d7da;
+        border-left: 5px solid #dc3545;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin: 1rem 0;
+    }
 </style>
 """, unsafe_allow_html=True)
+
+def check_required_files():
+    """Check if all required model files exist"""
+    required_files = {
+        'model': 'models/best_model.pth',
+        'encoders': 'data/processed/encoders.pkl'
+    }
+    
+    missing = []
+    for name, path in required_files.items():
+        if not os.path.exists(path):
+            missing.append((name, path))
+    
+    return missing
+
+def show_setup_instructions(missing_files):
+    """Display setup instructions when files are missing"""
+    st.markdown('<h1 class="main-header">🏥 AI Healthcare Assistant</h1>', unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div class="error-box">
+        ⚠️ <strong>Setup Required:</strong> The AI model hasn't been trained yet.
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("### Missing Files:")
+    for name, path in missing_files:
+        st.markdown(f"- **{name}**: `{path}`")
+    
+    st.markdown("---")
+    
+    st.markdown("""
+    ### 🚀 Setup Instructions
+    
+    To use this application, you need to train the model first:
+    
+    #### Option 1: Local Setup
+    ```bash
+    # 1. Clone the repository
+    git clone https://github.com/ishaanpal9970/medimind.git
+    cd medimind
+    
+    # 2. Install dependencies
+    pip install -r requirements.txt
+    
+    # 3. Ensure you have the dataset files in data/raw/:
+    #    - dataset.csv
+    #    - symptom_Description.csv
+    #    - symptom_precaution.csv
+    #    - Symptom-severity.csv
+    
+    # 4. Train the model
+    python main.py
+    
+    # 5. Run the app locally
+    streamlit run app.py
+    ```
+    
+    #### Option 2: Use Pre-trained Model
+    
+    If you have a pre-trained model:
+    1. Add `models/best_model.pth` to your repository
+    2. Add `data/processed/encoders.pkl` to your repository
+    3. Commit and push the changes
+    
+    #### Option 3: Quick Test (Demo Mode)
+    
+    For demonstration purposes, you can create a simple demo mode by training on a small dataset.
+    
+    ---
+    
+    ### 📚 Project Structure
+    ```
+    medimind/
+    ├── data/
+    │   ├── raw/                  # Put your CSV datasets here
+    │   └── processed/            # Generated after training
+    ├── models/                   # Generated after training
+    ├── src/
+    │   ├── model.py
+    │   ├── train.py
+    │   ├── inference.py
+    │   └── ...
+    ├── app.py                    # Streamlit application
+    ├── main.py                   # Training script
+    └── requirements.txt
+    ```
+    
+    ### 🔗 Resources
+    - [GitHub Repository](https://github.com/ishaanpal9970/medimind)
+    - [Streamlit Documentation](https://docs.streamlit.io)
+    - [PyTorch Documentation](https://pytorch.org/docs)
+    """)
+    
+    st.markdown("---")
+    st.info("💡 **Tip**: For Streamlit Cloud deployment, you need to include pre-trained models in your repository or set up a training pipeline that runs before the app starts.")
 
 # Initialize session state
 if 'chat_history' not in st.session_state:
     st.session_state.chat_history = []
 if 'selected_symptoms' not in st.session_state:
     st.session_state.selected_symptoms = []
-if 'assistant' not in st.session_state:
-    with st.spinner('Loading AI models...'):
-        st.session_state.assistant = HealthcareAssistant()
-        # Load TF-IDF encoder for semantic similarity
-        with open('data/processed/encoders.pkl', 'rb') as f:
-            data = pickle.load(f)
-            st.session_state.tfidf_encoder = TFIDFSymptomEncoder(data['symptom_vocab'])
+
+# Check for required files
+missing_files = check_required_files()
+
+if missing_files:
+    show_setup_instructions(missing_files)
+    st.stop()
+
+# Only load models if files exist
+try:
+    if 'assistant' not in st.session_state:
+        with st.spinner('Loading AI models...'):
+            from src.inference import HealthcareAssistant
+            from src.enhanced_model import TFIDFSymptomEncoder
+            
+            st.session_state.assistant = HealthcareAssistant()
+            
+            # Load TF-IDF encoder for semantic similarity
+            with open('data/processed/encoders.pkl', 'rb') as f:
+                data = pickle.load(f)
+                st.session_state.tfidf_encoder = TFIDFSymptomEncoder(data['symptom_vocab'])
+except Exception as e:
+    st.error(f"Error loading models: {str(e)}")
+    st.markdown("""
+    <div class="error-box">
+        ❌ <strong>Model Loading Failed:</strong> There was an error loading the AI models.
+        Please check that all required files are present and properly formatted.
+    </div>
+    """, unsafe_allow_html=True)
+    st.exception(e)
+    st.stop()
 
 def add_message(role, content):
     """Add message to chat history"""
